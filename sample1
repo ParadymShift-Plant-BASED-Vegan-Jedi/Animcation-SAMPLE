@@ -1,0 +1,159 @@
+$If[$message[1]==]
+/*     
+
+When no argument is given, this generic message will be sent     
+
+*/
+    $sendMessage[Welcome to the gif reactions! 
+    
+Express yourself with lively action gifs to add some fresh vibes to your Discord experience.
+
+Use the command 
+
+!a 
+
+plus the argument with your action like this:
+
+!a owo
+
+For a list of total actions, type 
+
+!a list
+
+For a look at your stats, type:
+
+!a stats
+
+Enjoy! ^^
+https://tenor.com/bHHah.gif]
+$endIf
+$if[$message[1]==list]
+/*        
+
+when the first argument is 'list', regardless of whatever else is written for the next arguments, the list will be sent       
+
+*/
+    $sendMessage[Here's a list of all of the available actions!
+    
+agree, angry, apologize, attack, ban, blush, bonk, bored, byebye, carry, challenge, comfort, cook, cringe, cry, dance, derp, dieinside, eat, evilpleasure, excited, eyebrow raise, flex, frustrated, getrekt, goodmorning, goodnight, happybirthday, happy, hi, hide, hiss, hmm, hug, ignore, ily, laugh, lazy, love, no, notimpressed, ohno, okay, owo, pathead, photosnap, please, preen, pull, runaway, shrug, shy, sigh, smile, spank, stare, stop, surprised, thumbsdown, thumbsup, uwu, wave, whatsup, worried, wtf, taunt, welcome, what, mmyummy
+
+More coming soon!]
+$endIf
+$if[$message[1]==stats]
+/*         
+
+when the first argument is 'stats', the following stat message will be sent        
+
+*/
+    $sendMessage[Currently under construction but coming soon!]
+$endIf
+/*
+
+Here is where the evilpleasure action command begins:
+
+It is organized into conditions which are named Condition[1], Condition[2]. Condition[3], and so on and so forth. 
+
+Condition[1] = User evilpleasurecount(Undefined): True && User Mention: True
+Condition[2] = User evilpleasurecount(Undefined): True && User Non-Mention Reply: True
+Condition[3] = User evilpleasurecount(Undefined): True && User Mention: False
+...............................................................................
+Condition[4] = User evilpleasurecount(Defined):   True && User Mention: True
+Condition[5] = User evilpleasurecount(Defined):   True && User Non-Mention Reply: True
+Condition[6] = User evilpleasurecount(Defined):   True && User Mention: False
+
+Furthermore, the image links are now conveniently stored in the following server variables. That way you only have to add the links one time and then you're all set! (as opposed to 6 different times, yikes!) You'll see those variables just below this message!
+*/
+$if[$message[1]==evilpleasure]
+	$setServerVar[evilpleasureImageLink1;YourFIRSTLinkGoesHere.gif]
+	$setServerVar[evilpleasureImageLink2;YourSECONDLinkGoesHere.gif]
+	$setServerVar[evilpleasureImageLink3;YourTHIRDLinkGoesHere.gif]
+	/*etc. Feel free to add as many GIFs as you like!*/
+$endif
+$if[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]==undefined&&$mentioned[1]!=]/*   This if condition is called Condition[1] and it is for when the user runs the evilpleasure command but has never evilpleasured (verified by the $getUserVar[evilpleasurec] [evilpleasure count] being undefined) while also mentioning another user (to evilpleasure at) [fyi, the evilpleasureac var is for counting how many times user has expressed evil pleasure to another], first setting the evilpleasure count and evilpleasureat count of the user to 1    */
+    $setUserVar[evilpleasurec;1]
+    $setUserVar[evilpleasureac;1]
+    $if[$getUserVar[evilpleasuredac;$mentioned[1]]==undefined]/* given Condition[1], if the evilpleasuredat count for the person being mentioned is ALSO undefined, the following code will run, setting that count to 1   */
+        $setUserVar[evilpleasuredac;1;$mentioned[1]]
+        $else/*       If the person being mentioned has a evilpleasuredat count which IS defined, then the following code will run, ending the condition for when the person being mentioned has a evilpleasuredat count which is ALSO undefined by adding a evilpleasuredat count to the already defined count variable     */
+        $setUserVar[evilpleasuredac;$sum[$getUserVar[evilpleasuredac;$mentioned[1]];1];$mentioned[1]]
+    $endIf
+    $if[$getUserVar[evilpleasuredac]==undefined]/*    given Condition[1], this condition will check to see if the user performing the action has ever been evilpleasuredat before. If not, that count will be set to 0.    */
+        $setUserVar[evilpleasuredac;0]
+    $endIf
+    $sendMessage[{description: $username expresses evil pleasure to $username[$mentioned[1]] ... }/*    given Condition[1], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getUserVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]==undefined&&$msg[$channelid;$referencemessageid;author]!=$authorID]/*      given that the Condition[1] is false, this condition, called Condition[2], will be run so long as the user agreing has an undefined evilpleasure count AND the non-mention reply individual is not the same person running the command. In other words, if you reply to a message but don't use a mention reply while using this command, this code will run, setting the user evilpleasure count and user evilpleasureat count each to 1       */
+        $setUserVar[evilpleasurec;1]
+        $setUserVar[evilpleasureac;1]
+        $if[$getUserVar[evilpleasuredac;$msg[$channelid;$referencemessageid;author]]==undefined]/*        given Condition[2], if the evilpleasuredat count of the person being replied (without a mention) to is undefined, the following code will run, setting the evilpleasuredat count to 1       */
+            $setUserVar[evilpleasuredac;1;$msg[$channelid;$referencemessageid;author]]
+            $else/*      But, if the evilpleasuredat count of the user being replied (without a mention) to IS defined, the following code will run, ending the condition for when the person being replied (without a mention) to has a evilpleasuredat count which is undefined by adding a count to this user's already pre-defined evilpleasuredat count       */ 
+                $setUserVar[evilpleasuredac;$sum[$getUserVar[evilpleasuredac;$msg[$channelid;$referencemessageid;author]];1];$msg[$channelid;$referencemessageid;author]]
+        $endIf
+        $if[$getUserVar[evilpleasuredac]==undefined]/*      Given condition[2], if the User evilpleasuredat count is undefined, the following code will run, setting it to 0.       */
+            $setUserVar[evilpleasuredac;0]
+        $endIf
+        $sendMessage[{description: $username expresses evil pleasure to $username[$msg[$channelid;$referencemessageid;author]] ... }/*          given Condition[2], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $endelseif
+    $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]==undefined&&$mentioned[1]==]/*         Given that both Condition[1] and Condition[2] are false, this condition, known as Condition[3] will be run, so long as the user evilpleasurecount is undefined and user has also NOT mentioned another user to evilpleasure at, the following code will run, setting the evilpleasurecount to 1 and setting the evilpleasureat count to 0.          */
+        $setUserVar[evilpleasurec;1]
+        $setUserVar[evilpleasureac;0]
+        $if[$getUserVar[evilpleasuredac]==undefined]/*          Given condition [3], if the user's evilpleasuredat count is also undefined, the following code will run, setting it to 0.          */
+            $setUserVar[evilpleasuredac;0]
+        $endIf
+        $sendMessage[{description: $username expresses evil pleasure ... }/*          given Condition[3], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $endelseif
+    $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]!=undefined&&$mentioned[1]!=]/*        Given that Conditions[1-3] are false, this condition, known as Condition[4] will be run, so long as the user evilpleasurecount IS defined and the user has ALSO tagged someone to evilpleasure at (using either the regular @tag or a mentioned reply)        */
+        $setUserVar[evilpleasurec;$sum[$getUserVar[evilpleasurec];1]]
+        $if[$getUserVar[evilpleasureac]==undefined]/*        Given Condition[4], this condition will run so long as the user evilpleasureat count is undefined, setting it to 1        */
+            $setUserVar[evilpleasureac;1]
+            $else/*      Given Condition[4], if the user evilpleasureat count IS defined, the following code will be run, updating the evilpleasureat count by adding one value to the var        */
+                $setUserVar[evilpleasureac;$sum[$getUserVar[evilpleasureac];1]]
+        $endIf
+        $if[$getUserVar[evilpleasuredac;$mentioned[1]]==undefined]/*       Given Condition[4], if the evilpleasuredat count of the person being tagged is undefined, the following code will run, setting it to 1        */
+            $setUserVar[evilpleasuredac;1;$mentioned[1]]
+            $else/*       Given Condition[4], if the evilpleasuredat count of the person being tagged IS defined, the following code will be run, updating the evilpleasuredat var by adding one value to the var       */
+                $setUserVar[evilpleasuredac;$sum[$getUserVar[evilpleasuredac;$mentioned[1]];1];$mentioned[1]]
+        $endIf
+        $if[$getUserVar[evilpleasuredac]==undefined]/*         Given Condition[4], the following code will run so long as the user evilpleasureat count is undefined, setting it to 0.         */
+            $setUserVar[evilpleasuredac;0]
+        $endIf
+        $sendMessage[{description: $username expresses evil pleasure to $username[$mentioned[1]] ... }/*          given Condition[4], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $endelseif
+    $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]!=undefined&&$msg[$channelid;$referencemessageid;author]!=$authorID]/*         Given that Conditions[1-4] are false, this condition, known as Condition[5] will be run so long as the user evilpleasurecount IS defined AND the user IS replying to someone who is NOT the original agreing user. In other words, if you reply to any message BESIDES your own message, but you HAVE evilpleasured before, the following code will run, adding one value to the user evilpleasure count.           */
+        $setUserVar[evilpleasurec;$sum[$getUserVar[evilpleasurec];1]]
+        $if[$getUserVar[evilpleasureac]==undefined]/*        Given Condition[5], if the user evilpleasureat count is undefined, the following code will run, setting it to 1.        */
+            $setUserVar[evilpleasureac;1]
+            $else/*        However, if the user evilpleasureat count IS defined, the following code will run, adding one value to the evilpleasureat count.        */
+                $setUserVar[evilpleasureac;$sum[$getUserVar[evilpleasureac];1]]
+        $endIf
+        $if[$getUserVar[evilpleasuredac;$msg[$channelid;$referencemessageid;author]]==undefined]/*        Given Condition[5], if the user being expressed evil pleasure to has a evilpleasuredat count which IS undefined, the following code will run, setting it to 1.       */        */
+            $setUserVar[evilpleasuredac;1;$msg[$channelid;$referencemessageid;author]]
+            $else/*        However, if the user being expressed evil pleasure to has a evilpleasuredat count which IS defined, the following code will run, adding one value to the evilpleasuredat count.         */
+                $setUserVar[evilpleasuredac;$sum[$getUserVar[evilpleasuredac;$msg[$channelid;$referencemessageid;author]];1];$msg[$channelid;$referencemessageid;author]]
+        $endIf
+        $if[$getUserVar[evilpleasuredac]==undefined]/*           Given Condition[5], if the user evilpleasuredat count IS undefined, the following code will run, setting it to 0.         */
+            $setUserVar[evilpleasuredac;0]
+        $endIf
+        $sendMessage[{description: $username expresses evil pleasure to $msg[$channelid;$referencemessageid;author]... }/*          given Condition[5], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $endelseif
+    $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]!=undefined&&$mentioned[1]==]/*        Given that Conditions[1-5] are false, the following condition, known as Condition[6], will be run so long as the user evilpleasure count IS defined and user did NOT mention anyone, adding one value to the user evilpleasurecount.          */
+        $setUserVar[evilpleasurec;$sum[$getUserVar[evilpleasurec];1]]
+        $if[$getUserVar[evilpleasuredac]==undefined]/*         Given Condition[6], if the user evilpleasuredat count is undefined, the following code will be run, setting that count to 0.        */
+            $setUserVar[evilpleasuredac;0]
+        $endIf
+        $sendMessage[{description: $username expresses evil pleasure ... }/*          given Condition[6], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3];... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
+    $endelseif
+$endIf
+/*endevilpleasures*/
