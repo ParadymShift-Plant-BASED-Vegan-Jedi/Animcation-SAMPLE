@@ -143,7 +143,7 @@ $if[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]==undefined&&$mentioned
             $setUserVar[evilpleasuredac;0]
         $endIf
         $sendMessage[{description: $username expresses evil pleasure to $msg[$channelid;$referencemessageid;author]... }/*          given Condition[5], this action message embed will be sent (THIS IS WHERE THE MAGIC HAPPENS)!          */
-{image:$randomText[{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
+{image:$randomText[$getServerVar[evilpleasureImageLink1];$getServerVar[evilpleasureImageLink2];$getServerVar[evilpleasureImageLink3]... etc.]}/*         PLEASE NOTE: You MUST first UPLOAD the .gif action images into your Discord server, then COPY the links and ADD/PASTE them at the top yourself, THEN add in the Server Variables to match!! (I've added the first 3 for you as an example)        THANK YOU!!     */
 {footer: $username has expressed evil pleasure to others $getUserVar[evilpleasureac] times and has had evil pleasure expressed by others $getUserVar[evilpleasuredac] times!}]
     $endelseif
     $elseif[$message[1]==evilpleasure&&$getUserVar[evilpleasurec]!=undefined&&$mentioned[1]==]/*        Given that Conditions[1-5] are false, the following condition, known as Condition[6], will be run so long as the user evilpleasure count IS defined and user did NOT mention anyone, adding one value to the user evilpleasurecount.          */
